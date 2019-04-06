@@ -22,17 +22,17 @@
 
 <div align="center">
     <form action="/login" method="post" id="form1">
-              qq: <input type="text" name="qq"/><br/>
-        call_num: <input type="text" name="call_num"/><br/>
-            addr: <input type="text" name="addr"/><br/>
-           email: <input type="text" name="email"/><br/>
+              qq: <input type="text" name="QQ"/><br/>
+        call_num: <input type="text" name="Call_num"/><br/>
+            addr: <input type="text" name="Addr"/><br/>
+           email: <input type="text" name="Email"/><br/>
         <p><input type="button" value="update" onclick="infermation()"></p>
     </form>
 </div>
 
 </body>
 <script type="text/javascript">
-    function register() {
+    function Infermation() {
         $.ajax({
             type: "POST",//方法类型
             dataType: "json",//预期服务器返回的数据类型
