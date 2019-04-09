@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -22,10 +23,10 @@ func initRouter() {
 	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
 		Level: 5,
 	}))
-	e.Use(middleware.JWTWithConfig(middleware.JWTConfig{
-		Skipper:    skipper,
-		SigningKey: []byte("goblog"),
-	}))
+	//e.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+	//	Skipper:    skipper,
+	//	SigningKey: []byte("goblog"),
+	//}))
 
 	//注册登录
 	{
@@ -45,11 +46,16 @@ func initRouter() {
 	//完善个人信息 restful
 	{
 
-		e.GET("infermation", func(c echo.Context) error {
+		e.GET("/infermation", func(c echo.Context) error {
+
 			return c.File("html/infermation.html")
 		})
 
 		e.PUT("/users/:id", putInfermation)
+		//获取验证码
+		e.PUT("/users/passwd", putPasswd)
+		//找回密码
+		e.PUT("/users/pd", putPasswd1)
 
 	}
 	//文章接口
@@ -85,7 +91,7 @@ func skipper(c echo.Context) bool {
 	if c.Request().Method == http.MethodOptions {
 		return true
 	}
-	if c.Path() == "/register" || c.Path() == "/login" || c.Path() == "/Infermation" || c.Path() == "/" {
+	if c.Path() == "/register" || c.Path() == "/login" || c.Path() == "/infermation" || c.Path() == "/" {
 		return true
 	}
 	return false
@@ -155,6 +161,9 @@ func postLogin(c echo.Context) error {
 func putInfermation(c echo.Context) error {
 	u := new(User)
 	resp := new(Response)
+	id := c.Param("id")
+	u.ID, _ = strconv.Atoi(id)
+	logrus.Infof("%+v\n", u)
 	if err := c.Bind(u); err != nil {
 		resp.Error = 1
 		resp.Msg = "参数格式错误"
@@ -174,4 +183,25 @@ func putInfermation(c echo.Context) error {
 	resp.Msg = "更新成功"
 	resp.Data = u
 	return c.JSON(200, resp)
+}
+
+func putPasswd(c echo.Context) error {
+	cd := genCode()
+	u := User{}
+	sendEmail(cd, u.Email)
+	mc[u.Email] = cd
+	return c.JSON(200, 0)
+}
+
+func putPasswd1(c echo.Context) error {
+	u := User{}
+	cd := c.Param("code")
+	v, ok := mc[u.Email]
+	if !ok {
+		return c.JSON(400, "验证码有误")
+	}
+	if v == cd {
+		//继续让他修改密码
+	}
+	return c.JSON(200, 0)
 }

@@ -21,7 +21,7 @@
 <body>
 
 <div align="center">
-    <form action="/login" method="put" id="form1">
+    <form  id="form1">
               qq: <input type="text" name="qq"/><br/>
         phone_num: <input type="text" name="phone_num"/><br/>
             addr: <input type="text" name="addr"/><br/>
@@ -32,11 +32,11 @@
 
 </body>
 <script type="text/javascript">
-    function Infermation() {
+    function infermation() {
         $.ajax({
-            type: "POST",//方法类型
+            type: "PUT",//方法类型
             dataType: "json",//预期服务器返回的数据类型
-            url: "/Infermation",//url
+            url: "/users/1",//url
             data: $('#form1').serialize(),
             success: function (result) {
                 console.log(result);//打印服务端返回的数据(调试用)

@@ -9,8 +9,9 @@ type User struct {
 	QQ       string `json:"qq" gorm:"qq" form:"qq"`                                   //结构体的tag
 	Email    string `json:"email" gorm:"email" form:"email"`
 	Addr     string `json:"addr" gorm:"addr" form:"addr"`
-	PhoneNum string `json:"phone_num" gorm:"phone_num" form:"phnoe_num"`
+	PhoneNum string `json:"phone_num" gorm:"phone_num" form:"phone_num"`
 	Status   int    `json:"status" gorm:"status default:0" form:"status"` //账号状态 0未审核 1已审核 2已注销
+
 	Model
 }
 
@@ -31,7 +32,7 @@ func (u *User) delete() error {
 	return db.Delete(u).Error
 }
 func (u *User) put() error {
-	return db.Updates(u).Error
+	return db.Model(&User{}).Updates(u).Error
 }
 
 func (u *User) login() error {
