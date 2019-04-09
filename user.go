@@ -3,14 +3,14 @@ package main
 import "github.com/sirupsen/logrus"
 
 type User struct {
-	ID       	int    		`json:"id" gorm:"id;AUTO_INCREMENT" form:"-"`                     //主键
-	Username 	string 		`json:"username" gorm:"username;unique;not null" form:"username"` //用户名
-	Password 	string 		`json:"password" gorm:"password" form:"password"` //密码
-	QQ       	int    		`json:"QQ" gorm:"QQ;AUTO_INCREMENT" form:"-"`
-	Email    	string 		`json:"Email" gorm:"Email;AUTO_INCREMENT" form:"-"`
-	Addr     	string 		`json:"Addr" gorm:"Addr;AUTO_INCREMENT" form:"-"`
-	Call_num 	int    		`json:"Call_num" gorm:"Call_num;AUTO_INCREMENT" form:"-"`
-	Status   	int    		`json:"status" gorm:"status default:0" form:"-"`                  //账号状态 0未审核 1已审核 2已注销
+	ID       int    `json:"id" gorm:"id;AUTO_INCREMENT" form:"-"`                     //主键
+	Username string `json:"username" gorm:"username;unique;not null" form:"username"` //用户名
+	Password string `json:"password" gorm:"password" form:"password"`                 //密码
+	QQ       string `json:"qq" gorm:"qq" form:"qq"`                                   //结构体的tag
+	Email    string `json:"email" gorm:"email" form:"email"`
+	Addr     string `json:"addr" gorm:"addr" form:"addr"`
+	PhoneNum string `json:"phone_num" gorm:"phone_num" form:"phnoe_num"`
+	Status   int    `json:"status" gorm:"status default:0" form:"status"` //账号状态 0未审核 1已审核 2已注销
 	Model
 }
 

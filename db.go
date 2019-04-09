@@ -34,5 +34,6 @@ func initDB() {
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return "blog_" + defaultTableName
 	}
+	//自动迁移  就自动建表
 	db.AutoMigrate(&User{})
 }

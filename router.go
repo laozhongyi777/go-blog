@@ -39,21 +39,18 @@ func initRouter() {
 			return c.File("html/login.html")
 		})
 		e.POST("/register", postRegister)
+
 		e.POST("/login", postLogin)
 	}
-	//完善个人信息
+	//完善个人信息 restful
 	{
-		e.GET("/", func(c echo.Context) error {
-			return c.File("html/index.html")
-		})
-		e.GET("/Infermation", func(c echo.Context) error {
+
+		e.GET("infermation", func(c echo.Context) error {
 			return c.File("html/infermation.html")
 		})
-		e.GET("/Infermation", func(c echo.Context) error {
-			return c.File("html/infermation.html")
-		})
-		e.POST("/Infermation", postInfermation)
-		e.POST("/Infermation", postInfermation)
+
+		e.PUT("/users/:id", putInfermation)
+
 	}
 	//文章接口
 	ga := e.Group("/article", middleware.JWT("123456"))
@@ -88,7 +85,7 @@ func skipper(c echo.Context) bool {
 	if c.Request().Method == http.MethodOptions {
 		return true
 	}
-	if c.Path() == "/register" || c.Path() == "/login" || c.Path() == "/Infermation"|| c.Path() == "/" {
+	if c.Path() == "/register" || c.Path() == "/login" || c.Path() == "/Infermation" || c.Path() == "/" {
 		return true
 	}
 	return false
@@ -155,7 +152,7 @@ func postLogin(c echo.Context) error {
 	return c.JSON(200, resp)
 }
 
-func postInfermation(c echo.Context) error {
+func putInfermation(c echo.Context) error {
 	u := new(User)
 	resp := new(Response)
 	if err := c.Bind(u); err != nil {
@@ -166,7 +163,7 @@ func postInfermation(c echo.Context) error {
 		return c.JSON(400, resp)
 	}
 	logrus.Infof("%+v\n", u)
-	if err := postI(u); err != nil {
+	if err := putI(u); err != nil {
 		resp.Error = 1
 		resp.Msg = "更新失败"
 		resp.Data = err.Error()
