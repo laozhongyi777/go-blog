@@ -22,8 +22,8 @@
 
 <div align="center">
     <form  id="form1">
-        Username: <input type="text" name="username"/><br/>
-        Password: <input type="text" name="Username"/><br/>
+        Username: <input type="text" name="username" value="{{.Username}}"/><br/>
+        Password: <input type="text" name="password"/><br/>
                        qq: <input type="text" name="qq"/><br/>
      phone_num: <input type="text" name="phone_num"/><br/>
                   addr: <input type="text" name="addr"/><br/>
@@ -35,11 +35,16 @@
 </body>
 <script type="text/javascript">
     function infermation() {
+        //go template
+        alert(localStorage.getItem("token"));
         $.ajax({
             type: "PUT",//方法类型
             dataType: "json",//预期服务器返回的数据类型
-            url: "/users/1",//url
+            url: "/users/"+id,//url
             data: $('#form1').serialize(),
+            headers:{
+                "Authorization":"Bearer "+localStorage.getItem("token")
+            },
             success: function (result) {
                 console.log(result);//打印服务端返回的数据(调试用)
                 if (result.error == 0) {

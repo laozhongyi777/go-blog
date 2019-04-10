@@ -41,6 +41,8 @@
                 console.log(result);//打印服务端返回的数据(调试用)
                 if (result.error == 0) {
                     alert("SUCCESS");
+                    alert(result.data);
+                    localStorage.setItem("token",result.data);
                 }
                 ;
             },

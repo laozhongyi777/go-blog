@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"io"
 	"net/http"
 	"os"
 	"os/signal"
@@ -18,15 +19,15 @@ import (
 func initRouter() {
 	e := echo.New()
 	// Middleware
-	e.Use(middleware.Logger())
+	//e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
 		Level: 5,
 	}))
-	//e.Use(middleware.JWTWithConfig(middleware.JWTConfig{
-	//	Skipper:    skipper,
-	//	SigningKey: []byte("goblog"),
-	//}))
+	e.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+		Skipper:    skipper,
+		SigningKey: []byte("goblog"),
+	}))
 
 	//注册登录
 	{
@@ -47,8 +48,12 @@ func initRouter() {
 	{
 
 		e.GET("/infermation", func(c echo.Context) error {
-
-			return c.File("html/infermation.html")
+			user := User{}
+			_ = user
+			return c.Render(http.StatusOK, "something.html", map[string]interface{}{
+				"name": "Dolly!",
+			})
+			//			return c.File("html/infermation.html")
 		})
 
 		e.PUT("/users/:id", putInfermation)
@@ -131,11 +136,9 @@ func postLogin(c echo.Context) error {
 		return c.JSON(400, resp)
 	}
 	logrus.Infof("%+v\n", u)
-	if err := u.login(); err != nil {
+	if u.login() {
 		resp.Error = 1
 		resp.Msg = "用户名/密码错误"
-		resp.Data = err.Error()
-		logrus.Error(err)
 		return c.JSON(400, resp)
 	}
 	token := jwt.New(jwt.SigningMethodHS256)
@@ -155,6 +158,7 @@ func postLogin(c echo.Context) error {
 	resp.Error = 0
 	resp.Msg = "登录成功"
 	resp.Data = t
+	logrus.Infoln(resp)
 	return c.JSON(200, resp)
 }
 
@@ -204,4 +208,19 @@ func putPasswd1(c echo.Context) error {
 		//继续让他修改密码
 	}
 	return c.JSON(200, 0)
+}
+
+type TemplateRenderer struct {
+	templates *template.Template
+}
+
+// Render renders a template document
+func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+
+	// Add global methods if data is a map
+	if viewContext, isMap := data.(map[string]interface{}); isMap {
+		viewContext["reverse"] = c.Echo().Reverse
+	}
+
+	return t.templates.ExecuteTemplate(w, name, data)
 }

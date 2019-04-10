@@ -35,6 +35,6 @@ func (u *User) put() error {
 	return db.Model(&User{}).Updates(u).Error
 }
 
-func (u *User) login() error {
-	return db.Model(u).Where("username=? and password=?", u.Username, u.Password).Error
+func (u *User) login() bool {
+	return db.Model(&User{}).Where("username=? and password=?", u.Username, u.Password).First(&User{}).RecordNotFound()
 }
