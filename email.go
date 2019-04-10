@@ -7,7 +7,7 @@ import (
 )
 
 func sendEmail(code string, emaddr string) {
-	auth := smtp.PlainAuth("", "qjkk88369yy@163.com", "Jq325com", "smtp.163.com")
+	auth := smtp.PlainAuth("", "qjkk88369yy@163.com", "xxx", "smtp.163.com")
 	to := []string{emaddr}
 	from := "qjkk88369yy@163.com"
 
