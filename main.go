@@ -18,7 +18,7 @@ func main() {
 	if conf.Redis {
 		initRedis()
 	}
-	//initRouter()
+	initRouter()
 	c := genCode()
 	em := "qjkk88369yy@163.com"
 	sendEmail(c, em)
