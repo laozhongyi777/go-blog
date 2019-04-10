@@ -20,13 +20,13 @@ DB=true
 #develop
 [dev]
 #redis配置
-RedisHost="192.168.2.116"
+RedisHost="192.168.2.7"
 RedisPort="6379"
 RedisPassword=""
 RedisDB=0
 Redis=false
 #DB配置
-DBHost="192.168.2.116"
+DBHost="192.168.2.7"
 DBPort="3306"
 DBUsername="root"
 DBPassword="123"
